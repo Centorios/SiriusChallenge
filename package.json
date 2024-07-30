@@ -10,7 +10,7 @@
         "typecheck": "tsc",
         "test": "jest",
         "test:watch": "jest --watch",
-        "prettier": "prettier --check .",
+        "prettier": "npx prettier --check .",
         "localverify": "npm run typecheck && npm run lint && npm run test && npm run prettier"
     },
     "dependencies": {
