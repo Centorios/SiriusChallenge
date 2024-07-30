@@ -25,4 +25,4 @@ jobs:
 
             - name: Prettier
               working-directory: ./
-              run: npm prettier
+              run: npm run prettier
