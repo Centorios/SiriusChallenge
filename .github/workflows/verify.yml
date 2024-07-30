@@ -1,27 +1,25 @@
 name: verify modelproj
 on: [push]
 jobs:
-    verify-siriuschallenge-web:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-              node-version: '20.11.0'
-
-            - name: Install dependencies
-              working-directory: ./
-              run: npm i
-
-            - name: Typecheck
-              working-directory: ./
-              run: npm run typecheck
-
-            - name: Lint
-              working-directory: ./
-              run: yarn lint
-              
-            - name: Prettier
-              working-directory: ./
-              run: npm prettier
-              
+  verify-modelproj-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        working-directory: ./
+        run: yarn install
+      - name: Typecheck
+        working-directory: ./
+        run: yarn typecheck
+      - name: Circular dependency check
+        working-directory: ./
+        run: yarn circular-deps
+      - name: Lint
+        working-directory: ./
+        run: yarn lint
+      - name: Prettier
+        working-directory: ./
+        run: yarn prettier
