@@ -1,0 +1,8 @@
+.next
+*.md
+tsconfig.json
+.vscode
+node_modules
+next.config.js
+slack-bot
+*.bin
