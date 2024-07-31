@@ -1,8 +1,8 @@
-import { UUID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 export interface SecretSanta {
-    id: UUID
-    gifterId: UUID
-    gifteeId: UUID
+    _id?: ObjectId
+    gifterId: ObjectId
+    gifteeId: ObjectId
     year: number
 }

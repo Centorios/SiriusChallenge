@@ -1,7 +1,7 @@
-import { UUID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 export interface GroupPerson {
-    id: UUID
-    group_id: UUID
-    person_id: UUID
+    _id?: ObjectId
+    group_id: ObjectId
+    person_id: ObjectId
 }

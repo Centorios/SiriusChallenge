@@ -1,6 +1,6 @@
-import { UUID } from 'mongodb'
+import { Long, ObjectId } from 'mongodb'
 
 export interface Group {
-    id: UUID
-    name: BigInt
+    _id?: ObjectId
+    name: Long
 }

@@ -1,6 +1,6 @@
-import { UUID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 export interface Person {
-    id: UUID
+    id?: ObjectId
     name: string
 }
