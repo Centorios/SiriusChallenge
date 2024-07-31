@@ -6,6 +6,7 @@ import {
     getPersonCollection,
 } from '@/app/types/db/getCollections'
 import { NextRequest } from 'next/server'
+import { StatusCodes } from 'http-status-codes'
 
 export async function POST(
     req: NextRequest,
@@ -68,11 +69,17 @@ export async function POST(
             })
         })
 
-        return Response.json({
-            message: `Person ${params.person_id} added to group ${parsedGroup.name}`,
-        })
+        return Response.json(
+            {
+                message: `Person ${params.person_id} added to group ${parsedGroup.name}`,
+            },
+            { status: StatusCodes.OK }
+        )
     } catch (error) {
         console.error(error)
-        return Response.json({ message: 'An error occurred!' }, { status: 400 })
+        return Response.json(
+            { message: 'An error occurred!' },
+            { status: StatusCodes.BAD_REQUEST }
+        )
     }
 }
