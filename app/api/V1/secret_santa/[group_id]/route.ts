@@ -1,4 +1,3 @@
-import { SecretSanta } from '@/app/types'
 import {
     getGroupPersonCollection,
     getPersonCollection,
@@ -17,7 +16,7 @@ export async function POST(
             throw new Error('No group id provided')
         }
 
-        const groupPersonArr = await (
+        const groupPersonCol = await (
             await getGroupPersonCollection()
         )
             .find({
@@ -25,18 +24,22 @@ export async function POST(
             })
             .toArray()
 
-        const persons = groupPersonArr.map((groupPerson) => {
+        const persons = groupPersonCol.map((groupPerson) => {
             return groupPerson.person_id
         })
 
-        const personNames = await (await getPersonCollection())
+        const personNamesCol = await (await getPersonCollection())
             .find({ _id: { $in: persons } })
             .toArray()
 
         //sort is mutable shuffledPersonNames is just a reference to personNames
-        const shuffledPersonNames = personNames.sort(() => Math.random() - 0.5)
+        //js sort is O(n log(n))
+        const shuffledPersonNames = personNamesCol.sort(
+            () => Math.random() - 0.5
+        )
 
         /////////////////////////////////////////////////////////////////////////////
+        //this part is O(n) because it is just a map with an if
         const secretSantaTuples = shuffledPersonNames.map(
             (person, idx, arr) => {
                 if (idx === arr.length - 1) {
@@ -58,6 +61,7 @@ export async function POST(
                 }
             }
         )
+
         /////////////////////////////////////////////////////////////////////////////
 
         const insert = await (
@@ -68,6 +72,7 @@ export async function POST(
                     gifterId: tuple.gifterId,
                     gifteeId: tuple.gifteeId,
                     year: tuple.year,
+                    groupId: new ObjectId(params.group_id),
                 }
             })
         )
@@ -76,10 +81,46 @@ export async function POST(
             throw new Error('Insert to secret santa collection failed')
         }
 
-        return Response.json(secretSantaTuples, { status: StatusCodes.OK })
+        //format response as stated in pdf like this: {gifter: giftee}
+        const response = secretSantaTuples.map((tuple) => {
+            const res = new Object()
+            Object.defineProperty(res, tuple.gifterName, {
+                value: tuple.gifteeName,
+                writable: true,
+                enumerable: true,
+                configurable: true,
+            })
+            return res
+        })
+
+        return Response.json(response, { status: StatusCodes.OK })
     } catch (error) {
         console.error(error)
 
+        return Response.json({ message: 'An error occurred!' })
+    }
+}
+
+export async function GET(
+    req: NextRequest,
+    { params }: { params: { group_id: string } }
+) {
+    try {
+        if (!params.group_id || !ObjectId.isValid(params.group_id)) {
+            throw new Error('No group id provided')
+        }
+
+        const groupPersonCol = await (
+            await getGroupPersonCollection()
+        )
+            .find({
+                group_id: new ObjectId(params.group_id),
+            })
+            .toArray()
+
+        return Response.json(groupPersonCol, { status: StatusCodes.OK })
+    } catch (error) {
+        console.error(error)
         return Response.json({ message: 'An error occurred!' })
     }
 }
