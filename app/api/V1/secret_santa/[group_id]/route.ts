@@ -43,6 +43,6 @@ export async function GET(
     } catch (error) {
         console.error(error)
 
-        return Response.json({ message: 'An error occurred!' })
+        return Response.json({ message: 'An error occurred!' }, { status: 400 })
     }
 }

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
             name: string
         } = await req.json()
 
-        if (!data.name) {
+        if (!data.name || data.name === '') {
             throw new Error('No name provided')
         }
 
@@ -31,6 +31,6 @@ export async function POST(req: NextRequest) {
         })
     } catch (error) {
         console.error(error)
-        return Response.json({ message: 'An error occurred!' })
+        return Response.json({ message: 'An error occurred!' }, { status: 400 })
     }
 }
