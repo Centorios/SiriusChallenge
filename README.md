@@ -69,5 +69,9 @@ ___
 
 ___
 
-
-
+## TO-DOs and Improvements
+- Dockerize the app to use local mongoDB
+- Add more tests
+- Add swagger documentation
+- Standardize the error messages
+- Standarize more http status codes
