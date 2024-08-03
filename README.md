@@ -74,4 +74,4 @@ ___
 - Add more tests
 - Add swagger documentation
 - Standardize the error messages
-- Standarize more http status codes
+- Standardize more http status codes
