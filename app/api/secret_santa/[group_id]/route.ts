@@ -18,14 +18,10 @@ export async function GET(
 
         //ORDER BY YEAR
         const secretSantaCol = (await getSecretSantaCollection())
-            .find(
-                {
-                    group_id: new ObjectId(params.group_id),
-                },
-                {
-                    sort: { year: -1 },
-                }
-            )
+            .find({
+                group_id: new ObjectId(params.group_id),
+            })
+            .sort({ year: -1 })
             .toArray()
 
         const groupPersonCol = (await getGroupPersonCollection())

@@ -17,14 +17,10 @@ export async function POST(
         }
 
         const secretSantaHistory = (await getSecretSantaCollection())
-            .find(
-                {
-                    group_id: new ObjectId(params.group_id),
-                },
-                {
-                    sort: { year: -1 },
-                }
-            )
+            .find({
+                group_id: new ObjectId(params.group_id),
+            })
+            .sort({ year: -1 })
             .toArray()
 
         const groupPersonCol = (await getGroupPersonCollection())
@@ -60,7 +56,7 @@ export async function POST(
             )
 
             /////////////////////////////////////////////////////////////////////////////
-            //this part is O(n) because it is just a map with an if
+            //this part is O(n) because it is just a map with an if statement (perfect matching algorithm)
             const secretSantaTuples = shuffledPersonNames.map(
                 (person, idx, arr) => {
                     if (idx === arr.length - 1) {
@@ -102,7 +98,7 @@ export async function POST(
                 throw new Error('Insert to secret santa collection failed')
             }
 
-            //format response as stated in pdf like this: {giftee: giftee}
+            //format response as stated in pdf like this: {giftee: gifter}
             const responseObj = new Object()
             secretSantaTuples.forEach((tuple) => {
                 const res = new Object()

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 
 export interface Person {
-    id?: ObjectId
+    _id?: ObjectId
     name: string
 }
