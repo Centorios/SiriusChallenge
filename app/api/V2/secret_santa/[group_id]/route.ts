@@ -3,6 +3,7 @@ import {
     getPersonCollection,
     getSecretSantaCollection,
 } from '@/app/types/db/getCollections'
+import { getSettings } from '@/app/types/getSettings'
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { NextRequest } from 'next/server'
@@ -12,6 +13,7 @@ export async function POST(
     { params }: { params: { group_id: string } }
 ) {
     try {
+        const secret_santa_condition = Number(getSettings().secret_santa_years)
         if (!params.group_id || !ObjectId.isValid(params.group_id)) {
             throw new Error('No group id provided')
         }
@@ -57,6 +59,12 @@ export async function POST(
                 }
             })
 
+            if (values[0].length === secret_santa_condition) {
+                console.error(
+                    'The number of years is equal to the secret santa condition, non repetition is not possible'
+                )
+            }
+
             //each position represents a year
             //each year has the adyancent matrix of the group
             const AdyMatrix: Array<Array<number>> = Array(values[1].length)
@@ -66,7 +74,10 @@ export async function POST(
 
             values[0]
                 .filter((secretSanta, idx, arr) => {
-                    return secretSanta.year >= arr[0].year - 1
+                    return (
+                        secretSanta.year >=
+                        arr[0].year - secret_santa_condition - 1
+                    )
                 })
 
                 .forEach((secretSanta) => {
@@ -79,20 +90,109 @@ export async function POST(
                         return person._id.equals(secretSanta.gifteeId)
                     })
 
-                    AdyMatrix[g!.idx][p!.idx] = 1
+                    if (!p || !g) {
+                        console.error('Person not found')
+                        return
+                    }
+
+                    AdyMatrix[g.idx][p.idx] = 1
                 })
 
             ///HERE GOES THE RANDOM GENERATION////
+
+            const shuffledPersonNames = personNamesCol.sort(
+                () => Math.random() - 0.5
+            )
+
+            const newSecretSantaTuples = shuffledPersonNames.map(
+                (person, idx, arr) => {
+                    if (idx === arr.length - 1) {
+                        return {
+                            gifterId: person._id,
+                            gifteeId: arr[0]._id,
+                            gifterName: person.name,
+                            gifteeName: arr[0].name,
+                            year: lastYear,
+                        }
+                    }
+
+                    return {
+                        gifterId: person._id,
+                        gifteeId: arr[idx + 1]._id,
+                        gifterName: person.name,
+                        gifteeName: arr[idx + 1].name,
+                        year: lastYear,
+                    }
+                }
+            )
+
             //////////////////////////////////////
 
             ///AND THEN HERE GOES THE COMPARISON WITH THE PREVIOUS ADJ TABLE////
-            ////////////////////////////////////////////////////////////////////
-            return Response.json(
-                { AdyMatrix, lastYear },
-                { status: StatusCodes.OK }
+
+            newSecretSantaTuples.forEach((tuple) => {
+                const p = personNamesCol.find((person) => {
+                    return person._id.equals(tuple.gifterId)
+                })
+
+                const g = personNamesCol.find((person) => {
+                    return person._id.equals(tuple.gifteeId)
+                })
+
+                if (!p || !g) {
+                    console.error('Person not found')
+                    return
+                }
+
+                if (AdyMatrix[g.idx][p.idx] === 1) {
+                    for (let i = 0; i < AdyMatrix[g.idx].length; i++) {
+                        if (AdyMatrix[g.idx][i] === 0) {
+                            const newP = personNamesCol.find((person) => {
+                                return person.idx === i
+                            })
+
+                            if (newP) {
+                                tuple.gifteeId = newP._id
+                            } else {
+                                console.error(
+                                    'there are no more people to assign, no duplicates isnt possible'
+                                )
+                            }
+                        }
+                    }
+                }
+            })
+
+            const insert = await (
+                await getSecretSantaCollection()
+            ).insertMany(
+                newSecretSantaTuples.map((tuple) => {
+                    return {
+                        gifterId: tuple.gifterId,
+                        gifteeId: tuple.gifteeId,
+                        year: tuple.year,
+                        group_id: new ObjectId(params.group_id),
+                    }
+                })
             )
+
+            if (!insert.acknowledged) {
+                throw new Error('Insert failed')
+            }
+
+            //format response as stated in pdf like this: {giftee: gifter}
+            type genericObject = { [key: string]: string }
+
+            const responseObj: genericObject = {}
+
+            newSecretSantaTuples.forEach((tuple) => {
+                responseObj[tuple.gifteeName] = tuple.gifterName
+            })
+
+            return Response.json(responseObj, { status: StatusCodes.OK })
         })
 
+        ////////////////////////////////////////////////////////////////////
         return response
     } catch (error) {
         console.error(error)

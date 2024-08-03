@@ -99,16 +99,12 @@ export async function POST(
             }
 
             //format response as stated in pdf like this: {giftee: gifter}
-            const responseObj = new Object()
+            type genericObject = { [key: string]: string }
+
+            const responseObj: genericObject = {}
+
             secretSantaTuples.forEach((tuple) => {
-                const res = new Object()
-                Object.defineProperty(responseObj, tuple.gifteeName, {
-                    value: tuple.gifterName,
-                    writable: true,
-                    enumerable: true,
-                    configurable: true,
-                })
-                return res
+                responseObj[tuple.gifteeName] = tuple.gifterName
             })
 
             return Response.json(responseObj, { status: StatusCodes.OK })

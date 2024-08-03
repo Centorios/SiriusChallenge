@@ -66,15 +66,22 @@ export async function GET(
                 const responseObj: Record<number, { name: string }> = {}
 
                 values[0].forEach((secretSanta) => {
-                    // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
                     const gifteeName = personNamesCol.find((person) => {
                         return person._id.equals(secretSanta.gifteeId)
-                    })!.name
+                    })
 
-                    // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
                     const gifterName = personNamesCol.find((person) => {
                         return person._id.equals(secretSanta.gifterId)
-                    })!.name
+                    })
+
+                    if (!gifteeName || !gifterName) {
+                        return Response.json(
+                            { message: 'No person found in the group' },
+                            {
+                                status: StatusCodes.NOT_FOUND,
+                            }
+                        )
+                    }
 
                     if (!responseObj.hasOwnProperty(secretSanta.year)) {
                         Object.defineProperty(responseObj, secretSanta.year, {
@@ -88,9 +95,9 @@ export async function GET(
                     //responseObj:any to reponseObj[secretSanta.year] hack around TS error
                     Object.defineProperty(
                         responseObj[secretSanta.year],
-                        gifteeName,
+                        gifteeName.name,
                         {
-                            value: gifterName,
+                            value: gifterName.name,
                             writable: true,
                             enumerable: true,
                             configurable: true,
