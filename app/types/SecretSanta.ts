@@ -4,6 +4,6 @@ export interface SecretSanta {
     _id?: ObjectId
     gifterId: ObjectId
     gifteeId: ObjectId
-    groupId: ObjectId
+    group_id: ObjectId
     year: number
 }
