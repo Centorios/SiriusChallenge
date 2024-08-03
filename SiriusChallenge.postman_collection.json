@@ -1,0 +1,131 @@
+{
+    "info": {
+        "_postman_id": "f726990d-4762-4088-b20a-302402b8f6c8",
+        "name": "SiriusChallenge",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "34857147"
+    },
+    "item": [
+        {
+            "name": "api/group",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\":\"2324342324324323425\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "localhost:3000/api/group",
+                    "host": ["localhost"],
+                    "port": "3000",
+                    "path": ["api", "group"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "api/person",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\":\"furia\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "localhost:3000/api/person",
+                    "host": ["localhost"],
+                    "port": "3000",
+                    "path": ["api", "person"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "api/group/add/[person_id]",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\":\"2324342324324323425\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "localhost:3000/api/group/add/66aea832ad3424574840d8bc",
+                    "host": ["localhost"],
+                    "port": "3000",
+                    "path": ["api", "group", "add", "66aea832ad3424574840d8bc"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "api/V1/secret_santa/[group_id]",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                    "raw": "localhost:3000/api/V1/secret_santa/66aa929433cc2205b17919c5",
+                    "host": ["localhost"],
+                    "port": "3000",
+                    "path": [
+                        "api",
+                        "V1",
+                        "secret_santa",
+                        "66aa929433cc2205b17919c5"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "/api/V2/secret_santa/[group_id]",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                    "raw": "localhost:3000/api/V2/secret_santa/66aa929433cc2205b17919c5",
+                    "host": ["localhost"],
+                    "port": "3000",
+                    "path": [
+                        "api",
+                        "V2",
+                        "secret_santa",
+                        "66aa929433cc2205b17919c5"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "api/secret_santa/[group_id]",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "localhost:3000/api/secret_santa/66aa929433cc2205b17919c5",
+                    "host": ["localhost"],
+                    "port": "3000",
+                    "path": ["api", "secret_santa", "66aa929433cc2205b17919c5"]
+                }
+            },
+            "response": []
+        }
+    ]
+}
