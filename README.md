@@ -9,6 +9,10 @@
 ### After first Load
     1.npm run start / npm run dev
 
+### Postman
+    1. Import the postman collection from the root folder
+    2. Run the requests
+
 ### Database Modification
 
 
