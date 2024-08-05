@@ -4,6 +4,7 @@
 
 import { POST } from '@/app/api/group/route'
 import { getGroupCollection } from '@/app/types/db/getCollections'
+import { StatusCodes } from 'http-status-codes'
 import { NextRequest } from 'next/server'
 
 const ack = {
@@ -32,7 +33,27 @@ describe('POST Group Endpoint', () => {
 
         const response = await POST(req as NextRequest)
 
-        expect(response.status).toBe(400)
+        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+        expect(console.error).toHaveBeenCalled()
+    })
+})
+
+describe('POST Group Endpoint', () => {
+    it('fails to insert a new group (empty name)', async () => {
+        const req = new Request('http://doesntmatter.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: '',
+            }),
+        })
+        console.error = jest.fn()
+
+        const response = await POST(req as NextRequest)
+
+        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
         expect(console.error).toHaveBeenCalled()
     })
 })

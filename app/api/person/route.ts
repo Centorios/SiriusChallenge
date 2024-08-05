@@ -1,5 +1,6 @@
 import { Person } from '@/app/types'
 import { getPersonCollection } from '@/app/types/db/getCollections'
+import { StatusCodes } from 'http-status-codes'
 import { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest) {
@@ -9,8 +10,6 @@ export async function POST(req: NextRequest) {
         }
 
         const data: Person = await req.json()
-
-        console.log(data)
 
         if (!data.name) {
             throw new Error('No name provided')
@@ -26,6 +25,9 @@ export async function POST(req: NextRequest) {
         })
     } catch (error) {
         console.error(error)
-        return Response.json({ message: 'An error occurred!' }, { status: 400 })
+        return Response.json(
+            { message: 'An error occurred!' },
+            { status: StatusCodes.INTERNAL_SERVER_ERROR }
+        )
     }
 }

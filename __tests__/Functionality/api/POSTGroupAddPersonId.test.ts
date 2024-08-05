@@ -8,6 +8,7 @@ import {
     getGroupPersonCollection,
     getPersonCollection,
 } from '@/app/types/db/getCollections'
+import { StatusCodes } from 'http-status-codes'
 import { NextRequest } from 'next/server'
 
 jest.mock('../../../app/types/db/getCollections')
@@ -44,7 +45,7 @@ describe('POST Group Add person endpoint', () => {
             params: { person_id: '66aa929433cc2205b17919c5' },
         })
 
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(StatusCodes.OK)
     })
 })
 

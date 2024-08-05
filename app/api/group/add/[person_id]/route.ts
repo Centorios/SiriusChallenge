@@ -79,7 +79,7 @@ export async function POST(
         console.error(error)
         return Response.json(
             { message: 'An error occurred!' },
-            { status: StatusCodes.BAD_REQUEST }
+            { status: StatusCodes.INTERNAL_SERVER_ERROR }
         )
     }
 }

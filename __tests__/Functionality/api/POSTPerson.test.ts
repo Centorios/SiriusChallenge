@@ -4,6 +4,7 @@
 
 import { POST } from '@/app/api/person/route'
 import { getPersonCollection } from '@/app/types/db/getCollections'
+import { StatusCodes } from 'http-status-codes'
 import { NextRequest } from 'next/server'
 
 const ack = {
@@ -30,7 +31,7 @@ describe('POST Person Endpoint', () => {
 
         const response = await POST(req as NextRequest)
 
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(StatusCodes.OK)
     })
 })
 

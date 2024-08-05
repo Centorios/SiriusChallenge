@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         console.error(error)
         return Response.json(
             { message: 'An error occurred!' },
-            { status: StatusCodes.BAD_REQUEST }
+            { status: StatusCodes.INTERNAL_SERVER_ERROR }
         )
     }
 }

@@ -33,13 +33,16 @@ export async function GET(
         const response = Promise.all([secretSantaCol, groupPersonCol]).then(
             async (values) => {
                 //non null assertion covered here
-                if (values[0].length === 0 || values[1].length === 0) {
-                    return Response.json(
-                        { message: 'No person found in the group' },
-                        {
-                            status: StatusCodes.NOT_FOUND,
-                        }
-                    )
+                if (values[0].length === 0) {
+                    return new Response(null, {
+                        status: StatusCodes.NO_CONTENT,
+                    })
+                }
+
+                if (values[1].length === 0) {
+                    return new Response(null, {
+                        status: StatusCodes.NO_CONTENT,
+                    })
                 }
 
                 const persons = values[1].map((groupPerson) => {
@@ -54,13 +57,12 @@ export async function GET(
                     })
                     .toArray()
                 //non null assertion covered here
+
+                //this shoudlnt fail ever
                 if (personNamesCol.length === 0) {
-                    return Response.json(
-                        { message: 'No person found in the group' },
-                        {
-                            status: StatusCodes.NOT_FOUND,
-                        }
-                    )
+                    return new Response(null, {
+                        status: StatusCodes.NO_CONTENT,
+                    })
                 }
 
                 const responseObj: Record<number, { name: string }> = {}
@@ -75,12 +77,9 @@ export async function GET(
                     })
 
                     if (!gifteeName || !gifterName) {
-                        return Response.json(
-                            { message: 'No person found in the group' },
-                            {
-                                status: StatusCodes.NOT_FOUND,
-                            }
-                        )
+                        return new Response(null, {
+                            status: StatusCodes.NO_CONTENT,
+                        })
                     }
 
                     if (!responseObj.hasOwnProperty(secretSanta.year)) {
@@ -92,7 +91,6 @@ export async function GET(
                         })
                     }
 
-                    //responseObj:any to reponseObj[secretSanta.year] hack around TS error
                     Object.defineProperty(
                         responseObj[secretSanta.year],
                         gifteeName.name,
@@ -113,6 +111,9 @@ export async function GET(
         return response
     } catch (error) {
         console.error(error)
-        return Response.json({ message: 'An error occurred!' })
+        return Response.json(
+            { message: 'An error occurred!' },
+            { status: StatusCodes.INTERNAL_SERVER_ERROR }
+        )
     }
 }

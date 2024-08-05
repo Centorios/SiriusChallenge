@@ -8,6 +8,7 @@ import {
     getGroupPersonCollection,
     getPersonCollection,
 } from '@/app/types/db/getCollections'
+import { StatusCodes } from 'http-status-codes'
 import { NextRequest } from 'next/server'
 
 const ack = {
@@ -49,7 +50,7 @@ describe('POST Group Endpoint', () => {
             params: { person_id: '66aa929433cc2205b17919c5' },
         })
 
-        expect(response.status).toBe(400)
+        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
         expect(console.error).toHaveBeenCalled()
     })
 })
@@ -71,7 +72,29 @@ describe('POST Group Endpoint', () => {
             params: { person_id: '123' },
         })
 
-        expect(response.status).toBe(400)
+        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+        expect(console.error).toHaveBeenCalled()
+    })
+})
+
+describe('POST Group Endpoint', () => {
+    it('fails to add a person to a group (undefined person_id)', async () => {
+        const req = new Request('http://doesntmatter.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: '1',
+            }),
+        })
+        console.error = jest.fn()
+
+        const response = await POST(req as NextRequest, {
+            params: { person_id: '' },
+        })
+
+        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
         expect(console.error).toHaveBeenCalled()
     })
 })
@@ -93,7 +116,7 @@ describe('POST Group Endpoint', () => {
             params: { person_id: '123' },
         })
 
-        expect(response.status).toBe(400)
+        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
         expect(console.error).toHaveBeenCalled()
     })
 })
