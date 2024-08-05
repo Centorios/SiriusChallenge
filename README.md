@@ -92,3 +92,4 @@ ___
 - Dockerize the app to use local mongoDB
 - Add swagger documentation
 - Standardize the error messages
+- Autodeploy to heroku/vercel
