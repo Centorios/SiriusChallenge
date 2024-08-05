@@ -4,6 +4,7 @@
     2. write the ".env.local" file at root level (there is a template)
     3. npm install
     4. npm run start / npm run dev
+    (the project was made with 20.11.0 node version)
 
 ### After first Load
     1.npm run start / npm run dev
