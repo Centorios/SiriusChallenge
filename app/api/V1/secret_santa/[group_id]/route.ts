@@ -40,6 +40,9 @@ export async function POST(
             } else {
                 lastYear = new Date().getFullYear()
             }
+            if (values[1].length === 0) {
+                throw new Error('No people in group')
+            }
 
             const persons = values[1].map((groupPerson) => {
                 return groupPerson.person_id
@@ -48,6 +51,10 @@ export async function POST(
             const personNamesCol = await (await getPersonCollection())
                 .find({ _id: { $in: persons } })
                 .toArray()
+
+            if (personNamesCol.length === 0) {
+                throw new Error('the people in the group do not exist')
+            }
 
             //sort is mutable shuffledPersonNames is just a reference to personNames
             //js sort is O(n log(n))
