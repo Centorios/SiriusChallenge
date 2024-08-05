@@ -6,13 +6,11 @@ import { POST } from '@/app/api/group/route'
 import { getGroupCollection } from '@/app/types/db/getCollections'
 import { NextRequest } from 'next/server'
 
-//const insert = await (await getGroupCollection()).insertOne(parsedGroup)
-
 const ack = {
     acknowledged: true,
 }
 
-jest.mock('../app/types/db/getCollections')
+jest.mock('../../../app/types/db/getCollections')
 ;(getGroupCollection as jest.Mock).mockImplementation(() => {
     return {
         insertOne: (obj: { name: string }) => ack,
@@ -37,4 +35,8 @@ describe('POST Group Endpoint', () => {
         expect(response.status).toBe(400)
         expect(console.error).toHaveBeenCalled()
     })
+})
+
+afterAll(() => {
+    jest.clearAllMocks()
 })

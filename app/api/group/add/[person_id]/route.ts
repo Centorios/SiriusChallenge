@@ -30,7 +30,7 @@ export async function POST(
         }
 
         if (!params.person_id || !ObjectId.isValid(params.person_id)) {
-            throw new Error('No person id provided')
+            throw new Error('No person id provided or object id is invalid')
         }
 
         const group = (await getGroupCollection()).findOne({

@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
 
         const data: Person = await req.json()
 
+        console.log(data)
+
         if (!data.name) {
             throw new Error('No name provided')
         }
@@ -24,6 +26,6 @@ export async function POST(req: NextRequest) {
         })
     } catch (error) {
         console.error(error)
-        return Response.json({ message: 'An error occurred!' })
+        return Response.json({ message: 'An error occurred!' }, { status: 400 })
     }
 }
