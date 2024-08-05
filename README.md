@@ -1,7 +1,7 @@
 ## Getting Started
 ### First Load
     1. Clone the repository
-    2. write the ".env.local" file at root level (there is a template)
+    2. write the ".env.local" and the ".env.test" files at root level (there is a template)
     3. npm install
     4. npm run start / npm run dev
     (the project was made with 20.11.0 node version)
