@@ -8,6 +8,25 @@
 ### After first Load
     1.npm run start / npm run dev
 
+### Database Modification
+
+
+| __SecretSanta__      |
+| :------------------------- |
+|id : uuid|
+| gifterId : uuid |
+| gifteeId : uuid |
+| year : int|
+|__groupId : uuid__ |<- added this field
+
+this field was added to get history of secret santas for previous years easier
+
+without groupId as a foreign key in ___SecretSanta___ collection, the join to recover the history is painfully slow, it involves a lot of cartesian products
+
+for more information on implementation results see 
+- [app/api/secret_santa/[group_id]/route.ts](https://github.com/Centorios/SiriusChallenge/blob/main/app/api/secret_santa/%5Bgroup_id%5D/route.ts)
+
+
 
 ## API Reference
 
@@ -71,7 +90,5 @@ ___
 
 ## TO-DOs and Improvements
 - Dockerize the app to use local mongoDB
-- Add more tests
 - Add swagger documentation
 - Standardize the error messages
-- Standardize more http status codes
